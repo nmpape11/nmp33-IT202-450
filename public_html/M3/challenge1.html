@@ -27,7 +27,7 @@ Requirements:
         </ul>
     </nav>
     <!-- Edit your UCID here -->
-    <header>Header Section (mt85)</header>
+    <header>Header Section (nmp33)</header>
     <!-- Don't make any other edits to the HTML -->
     <main>
         <div class="content">
@@ -58,4 +58,51 @@ Requirements:
 <style>
     /* You're free to make whatever edits you need here, just don't override anything in the styles.css */
     /* See the requirements at the top. If easier, you may copy/paste them here*/
+
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    body.challenge1 {
+        display: flex;
+        flex-direction: column;
+    }
+
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 10px;
+        z-index: 10;
+    }
+
+    nav {
+        margin-top: 10px;
+        height: 50px;
+        flex-shrink: 0;
+    }
+
+    footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 10px;
+        z-index: 10;
+    }
+
+    main {
+        position: absolute;
+        top: 60px;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        overflow-y: auto;
+        padding: 1em;
+        box-sizing: border-box;
+    }
 </style>
