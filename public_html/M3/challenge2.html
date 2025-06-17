@@ -96,13 +96,12 @@ Requirements:
 
 <script>
     /* Solve the button logic here by finding and attaching an appropriate event listener and logic*/
-    // Toggle logic for both sidebars
-document.querySelectorAll('aside button').forEach(button => {
-    button.addEventListener('click', () => {
-        const sidebar = button.parentElement;
-        sidebar.classList.toggle('collapsed');
+    document.querySelectorAll('aside button').forEach(button => {
+        button.addEventListener('click', () => {
+            const sidebar = button.parentElement;
+            sidebar.classList.toggle('collapsed');
+        });
     });
-});
 
 </script>
 
