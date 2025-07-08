@@ -1,25 +1,34 @@
 <?php
 require(__DIR__ . "/../../partials/nav.php");
 ?>
-<h3>Login</h3>
-<form onsubmit="return validate(this)" method="POST">
-    <div>
-        <label for="email">Email or Username</label>
-        <input id="email" type="text" name="email" required />
-    </div>
-    <div>
-        <label for="pw">Password</label>
-        <input type="password" id="pw" name="password" required minlength="8" />
-    </div>
-    <input type="submit" value="Login" />
-</form>
+
 <script>
     function validate(form) {
-        //TODO 1: implement JavaScript validation (you'll do this on your own towards the end of Milestone1)
-        //ensure it returns false for an error and true for success
+        const email = form.email.value.trim();
+        const password = form.password.value.trim();
 
-        return true;
+        let isValid = true;
+        const flashDiv = document.getElementById("flash");
+        if (flashDiv) flashDiv.innerHTML = "";
+
+        if (!email) {
+            flash("Email or username is required.", "danger");
+            isValid = false;
+        }
+
+        if (!password) {
+            flash("Password is required.", "danger");
+            isValid = false;
+        }
+
+        if (password.length > 0 && password.length < 8) {
+            flash("Password must be at least 8 characters.", "danger");
+            isValid = false;
+        }
+
+        return isValid;
     }
+
 </script>
 <?php
 //TODO 2: add PHP Code
@@ -119,6 +128,19 @@ if (isset($_POST["email"], $_POST["password"])) {
     }
 }
 ?>
+
+<h3>Login</h3>
+<form onsubmit="return validate(this)" method="POST">
+    <div>
+        <label for="email">Email or Username</label>
+        <input id="email" type="text" name="email" value="<?php se($email); ?>" required />
+    </div>
+    <div>
+        <label for="pw">Password</label>
+        <input type="password" id="pw" name="password" required minlength="8" />
+    </div>
+    <input type="submit" value="Login" />
+</form>
 
 <?php
 require(__DIR__ . "/../../partials/flash.php");
