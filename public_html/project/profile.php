@@ -176,33 +176,47 @@ if (isset($_POST["currentPassword"], $_POST["newPassword"], $_POST["confirmPassw
 
 <script>
     function validate(form) {
-        let pw = form.newPassword.value;
-        let con = form.confirmPassword.value;
         let isValid = true;
-        //TODO add other client side validation....
+        const email = form.email.value.trim();
+        const username = form.username.value.trim();
+        const pw = form.newPassword.value;
+        const con = form.confirmPassword.value;
+        const cp = form.currentPassword.value;
 
-        //example of using flash via javascript
-        //find the flash container, create a new element, appendChild
-        // NOTE: we'll extract the flash code to a function later
-        if (pw !== con) { // first JS validation example
-            //find the container
-            let flash = document.getElementById("flash");
-            //create a div (or whatever wrapper we want)
-            let outerDiv = document.createElement("div");
-            outerDiv.className = "row justify-content-center";
-            let innerDiv = document.createElement("div");
+        const flashDiv = document.getElementById("flash");
+        if (flashDiv) flashDiv.innerHTML = "";
 
-            //apply the CSS (these are bootstrap classes which we'll learn later)
-            innerDiv.className = "alert alert-warning";
-            //set the content
-            innerDiv.innerText = "Password and Confirm password must match";
-
-            outerDiv.appendChild(innerDiv);
-            //add the element to the DOM (if we don't it merely exists in memory)
-            flash.appendChild(outerDiv);
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (email && !emailPattern.test(email)) {
+            flash("Invalid email format.", "danger");
             isValid = false;
         }
-        // returning false will prevent the form from submitting
+
+        const usernamePattern = /^[a-z0-9_-]+$/;
+        if (username && !usernamePattern.test(username)) {
+            flash("Username must be lowercase, alphanumerical, and can only contain _ or -", "danger");
+            isValid = false;
+        }
+
+        const changingPassword = pw || con || cp;
+
+        if (changingPassword) {
+            if (!pw || !con || !cp) {
+                flash("All password fields are required to change your password.", "danger");
+                isValid = false;
+            }
+
+            if (pw.length > 0 && pw.length < 8) {
+                flash("New password must be at least 8 characters long.", "danger");
+                isValid = false;
+            }
+
+            if (pw !== con) {
+                flash("Password and confirm password must match.", "danger");
+                isValid = false;
+            }
+        }
+
         return isValid;
     }
 </script>
