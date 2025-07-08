@@ -5,6 +5,7 @@ if (!is_logged_in()) {
 }
 ?>
 <?php
+// 7/7 nmp33 php validation
 $user_id = get_user_id(); // get id from session
 $email = get_user_email(); // get email from session
 $username = get_username(); // get username from session
@@ -147,15 +148,16 @@ if (isset($_POST["currentPassword"], $_POST["newPassword"], $_POST["confirmPassw
     }
 }
 ?>
+<!-- 7/7 nmp33 html validation -->
 <h3>Profile</h3>
 <form method="POST" onsubmit="return validate(this);">
     <div class="mb-3">
         <label for="email">Email</label>
-        <input type="email" name="email" id="email" value="<?php se($email); ?>" />
+        <input type="email" name="email" id="email" value="<?php se($email); ?>" required />
     </div>
     <div class="mb-3">
         <label for="username">Username</label>
-        <input type="text" name="username" id="username" value="<?php se($username); ?>" />
+        <input type="text" name="username" id="username" value="<?php se($username); ?>" required />
     </div>
     <!-- DO NOT PRELOAD PASSWORD -->
     <div>Password Reset</div>
@@ -175,6 +177,7 @@ if (isset($_POST["currentPassword"], $_POST["newPassword"], $_POST["confirmPassw
 </form>
 
 <script>
+    // 7/7 nmp33 js validate
     function validate(form) {
         let isValid = true;
         const email = form.email.value.trim();
