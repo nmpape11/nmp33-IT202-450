@@ -24,7 +24,7 @@
 </script>
 <?php
 // TODO 2: add PHP Code
-require(__DIR__."/../../lib/functions.php");
+require(__DIR__ . "/../../partials/nav.php");
 
 if (isset($_POST["email"], $_POST["password"], $_POST["confirm"])) {
 
