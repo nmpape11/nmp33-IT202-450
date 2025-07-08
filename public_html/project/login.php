@@ -5,6 +5,7 @@ $username = "";
 ?>
 
 <script>
+    // 7/7 nmp33 js validate
     function validate(form) {
         const email = form.email.value.trim();
         const password = form.password.value.trim();
@@ -34,6 +35,7 @@ $username = "";
 </script>
 <?php
 //TODO 2: add PHP Code
+// 7/7 nmp33 php validation
 if (isset($_POST["email"], $_POST["password"])) {
     // still leveraging the property as "email", but it can be a username
     $email = se($_POST, "email", "", false);
@@ -131,6 +133,7 @@ if (isset($_POST["email"], $_POST["password"])) {
 }
 ?>
 
+<!-- 7/7 nmp33 html login form -->
 <h3>Login</h3>
 <form onsubmit="return validate(this)" method="POST">
     <div>
