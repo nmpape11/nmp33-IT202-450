@@ -8,6 +8,10 @@ require(__DIR__."/../../partials/nav.php");
         <input id="email" type="email" name="email" required />
     </div>
     <div>
+        <label for="username">Username</label>
+        <input type="text" name="username" required maxlength="30" />
+    </div>
+    <div>
         <label for="pw">Password</label>
         <input type="password" id="pw" name="password" required minlength="8" />
     </div>
@@ -27,9 +31,10 @@ require(__DIR__."/../../partials/nav.php");
 </script>
 <?php
  //TODO 2: add PHP Code
- if (isset($_POST["email"], $_POST["password"], $_POST["confirm"])) {
+ if (isset($_POST["email"], $_POST["username"], $_POST["password"], $_POST["confirm"])) {
 
-    $email = se($_POST, "email", "", false); 
+    $email = se($_POST, "email", "", false);
+    $username = se($_POST, "username", "", false);
     $password = se($_POST, "password", "", false);
     $confirm = se($_POST, "confirm", "", false);
     // TODO 3: validate/use
@@ -47,6 +52,18 @@ require(__DIR__."/../../partials/nav.php");
         flash("Invalid email address.", "danger");
         $hasError = true;
     }
+
+    if (empty($email)) {
+        //echo "Email must not be empty<br>";
+        flash("Username must not be empty.", "danger");
+        $hasError = true;
+    }
+
+    if (!preg_match('/^[a-z0-9-_]{3,30}$/', $username)) {
+        flash("Username must be lowercase, alphanumerical, and can only contain _ or -", "danger");
+        $hasError = true;
+    }
+
     if (empty($password)) {
         //echo "Password must not be empty<br>";
         flash("Password must not be empty.", "danger");
@@ -76,9 +93,9 @@ require(__DIR__."/../../partials/nav.php");
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
         $db = getDB(); // available due to the `require()` of `functions.php`
         // Code for inserting user data into the database
-        $stmt = $db->prepare("INSERT INTO Users (email, password) VALUES (:email, :password)");
+        $stmt = $db->prepare("INSERT INTO Users (email, password, username) VALUES(:email, :password, :username)");
         try{
-            $stmt->execute([':email' => $email, ':password' => $hashed_password]);
+            $stmt->execute([":email" => $email, ":password" => $hashed_password, ":username" => $username]);
             //echo "Successfully registered!<br>";
             flash("Successfully registered! You can now log in.", "success");
         }
