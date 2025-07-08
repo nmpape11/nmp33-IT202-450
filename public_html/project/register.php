@@ -1,5 +1,5 @@
 <?php
-require(__DIR__."/../../partials/nav.php");
+require(__DIR__ . "/../../partials/nav.php");
 ?>
 <h3>Register</h3>
 <form onsubmit="return validate(this)" method="POST">
@@ -30,77 +30,63 @@ require(__DIR__."/../../partials/nav.php");
     }
 </script>
 <?php
- //TODO 2: add PHP Code
- if (isset($_POST["email"], $_POST["username"], $_POST["password"], $_POST["confirm"])) {
+if (isset($_POST["email"], $_POST["password"], $_POST["confirm"], $_POST["username"])) {
 
     $email = se($_POST, "email", "", false);
-    $username = se($_POST, "username", "", false);
     $password = se($_POST, "password", "", false);
     $confirm = se($_POST, "confirm", "", false);
+    $username = se($_POST, "username", "", false);
     // TODO 3: validate/use
     $hasError = false;
 
     if (empty($email)) {
-        //echo "Email must not be empty<br>";
         flash("Email must not be empty.", "danger");
         $hasError = true;
     }
     // Sanitize and validate email
     $email = sanitize_email($email);
     if (!is_valid_email($email)) {
-        //echo "Invalid email address<br>";
         flash("Invalid email address.", "danger");
         $hasError = true;
     }
-
-    if (empty($email)) {
-        //echo "Email must not be empty<br>";
-        flash("Username must not be empty.", "danger");
-        $hasError = true;
-    }
-
-    if (!preg_match('/^[a-z0-9-_]{3,30}$/', $username)) {
+    if (!is_valid_username($username)) {
         flash("Username must be lowercase, alphanumerical, and can only contain _ or -", "danger");
         $hasError = true;
     }
-
     if (empty($password)) {
-        //echo "Password must not be empty<br>";
         flash("Password must not be empty.", "danger");
         $hasError = true;
     }
 
     if (empty($confirm)) {
-        //echo "Confirm password must not be empty<br>";
         flash("Confirm password must not be empty.", "danger");
         $hasError = true;
     }
 
-    if (strlen($password) < 8) {
-        //echo "Password too short<br>";
+    if (!is_valid_password($password)) {
         flash("Password must be at least 8 characters long.", "danger");
         $hasError = true;
     }
 
-    if ($password !== $confirm) {
-        //echo "Passwords must match<br>";
+    if (!is_valid_confirm($password, $confirm)) {
         flash("Passwords must match.", "danger");
         $hasError = true;
     }
 
     if (!$hasError) {
-        // TODO 4: Hash password and store record in DB
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
         $db = getDB(); // available due to the `require()` of `functions.php`
         // Code for inserting user data into the database
-        $stmt = $db->prepare("INSERT INTO Users (email, password, username) VALUES(:email, :password, :username)");
-        try{
-            $stmt->execute([":email" => $email, ":password" => $hashed_password, ":username" => $username]);
-            //echo "Successfully registered!<br>";
+        $stmt = $db->prepare("INSERT INTO Users (email, password, username) VALUES (:email, :password, :username)");
+        try {
+            $stmt->execute([':email' => $email, ':password' => $hashed_password, ':username' => $username]);
+   
             flash("Successfully registered! You can now log in.", "success");
+        } catch(PDOException $e) {
+            // Handle duplicate email/username
+            users_check_duplicate($e);
         }
-        catch(Exception $e){
-            //echo "There was an error registering<br>"; // user-friendly message
+        catch (Exception $e) {
             flash("There was an error registering. Please try again.", "danger");
             error_log("Registration Error: " . var_export($e, true)); // log the technical error for debugging
         }
@@ -108,5 +94,6 @@ require(__DIR__."/../../partials/nav.php");
 }
 ?>
 <?php
-require(__DIR__."/../../partials/flash.php");
+require(__DIR__ . "/../../partials/flash.php");
+reset_session();
 ?>
