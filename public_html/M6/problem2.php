@@ -30,12 +30,21 @@ function processCars($cars) {
     $processedCars = []; // result array
     $classic_age = 25; // don't change this value
     // Start edits
-   
+    // nmp33 7/14
+    //PLAN: change current year using date("Y"), then iterate over the array same as last problem. Add logic to determine age, curr year - year, and is classic with (age >= classic)
+    $currentYear = date("Y");
+
+    foreach ($cars as $car) {
+        $age = $currentYear - $car["year"];
+        $car["age"] = $currentYear - $car["year"];;
+        $car["isClassic"] = ($age >= $classic_age);
+        $processedCars[] = $car;
+    }
     // End edits
     echo "<pre>" . var_export($processedCars, true) . "</pre>";
     
 }
-$ucid = "mt85"; // replace with your UCID
+$ucid = "nmp33"; // replace with your UCID
 printHeader($ucid, 2); 
 ?>
 <table>
