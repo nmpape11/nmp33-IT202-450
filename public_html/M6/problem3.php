@@ -50,13 +50,26 @@ function joinArrays($users, $activities) {
     // TODO Objective: Add logic to join both arrays on the userId property into one $joined array
     $joined = []; // result array
     // Start edits
-    
+    //nmp33 7/14
+    //PLAN: Using userId as the key I will build an array containing the activities with userId as the key
+    //Iterate over each user using foreach and then lookup the users ID in the activity map. Merge the activity into the rest of the user info
 
+    $activityMap = [];
+    foreach ($activities as $activity) {
+        $activityMap[$activity["userId"]] = $activity["activity"];
+    }
+
+    foreach ($users as $user) {
+        $userId = $user["userId"];
+        $user["activity"] = $activityMap[$userId];
+        $joined[] = $user;
+    }
+    
     // End edits
     echo "<pre>" . var_export($joined, true) . "</pre>";
 }
 
-$ucid = "mt85"; // replace with your UCID
+$ucid = "nmp33"; // replace with your UCID
 printHeader($ucid, 3); 
 ?>
 <table>
