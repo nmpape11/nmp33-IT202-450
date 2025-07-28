@@ -19,4 +19,5 @@ require(__DIR__ . "/duplicate_user_details.php");
 //reset session
 require(__DIR__ . "/reset_session.php");
 require(__DIR__ . "/api_helper.php");
+require(__DIR__ . "/trail_api.php");
 ?>
