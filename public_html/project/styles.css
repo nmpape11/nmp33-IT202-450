@@ -87,15 +87,22 @@ form, h3 {
     width: 100%;
 }
 
-/* Each input group block */
-form > div {
+/* Inline Form Enhancements */
+form.inline-form {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    max-width: 1000px;
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1rem;
 }
 
-/* Labels & Inputs */
+form.inline-form > .form-item {
+    flex: 1 1 200px;
+    display: flex;
+    flex-direction: column;
+}
+
 label {
     margin-bottom: 0.25rem;
     font-size: 1rem;
@@ -118,7 +125,6 @@ input:focus, select:focus {
     border-color: #666;
 }
 
-/* Submit Buttons */
 input[type="submit"] {
     cursor: pointer;
     background-color: #444;
@@ -136,3 +142,56 @@ input[type="submit"]:hover {
 input[type="submit"]:active {
     transform: scale(0.95);
 }
+
+.trail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 1000px;
+}
+
+.trail-card {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease, background-color 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100px;
+}
+
+.trail-card:hover {
+    transform: translateY(-4px);
+    background-color: #292929;
+}
+
+.trail-card h2.trail-name {
+    margin: 0 0 0.5rem 0;
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+.trail-card p.trail-location {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #aaa;
+}
+
+.trail-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.trail-card-link:hover .trail-card {
+    transform: translateY(-4px);
+    background-color: #292929;
+}
+
