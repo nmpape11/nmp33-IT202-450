@@ -1,5 +1,7 @@
 <?php
 require(__DIR__ . "/../../partials/nav.php");
+
+//nmp33 7/28
 if (!is_logged_in()) {
     flash("Must be logged in!", "danger");
     die(header("Location: login.php"));

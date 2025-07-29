@@ -11,6 +11,8 @@ if (!has_role("Admin")) {
     die(header("Location: " . get_url("landing.php")));
 }
 
+//nmp33 7/28
+
 $db = getDB();
 
 $id = $_GET['id'] ?? $_POST['id'] ?? null;

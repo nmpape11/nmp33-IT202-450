@@ -12,7 +12,7 @@ if (!has_role("Admin")) {
 }
 
 $db = getDB();
-
+//nmp33 7/28
 // Get next ID
 $stmt = $db->prepare("SELECT MAX(id) as max_id FROM `IT202-M25-Trails`");
 $stmt->execute();
