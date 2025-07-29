@@ -36,6 +36,7 @@ function markFullyCached(PDO $db, string $state, ?string $city) {
     ]);
 }
 
+//nmp33 7/28
 function get_trails_or_fetch(string $state, ?string $city = null) {
     $db = getDB();
 

@@ -2,6 +2,8 @@
 
 require(__DIR__ . "/trail_insert.php");
 
+//nmp33 7/28
+
 function fetch_trail_data(PDO $db, $state, $city = null, $activity = null)
 {
     $data = [
