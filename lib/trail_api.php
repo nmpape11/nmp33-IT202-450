@@ -1,36 +1,16 @@
 <?php
 
-$TRAIL_ACTIVITIES = [
-    "hiking",
-    "mountain biking",
-    "camping",
-    "caving",
-    "trail running",
-    "snow sports",
-    "atv",
-    "horseback riding"
-];
-
 require(__DIR__ . "/trail_insert.php");
 
-// Add back $db param when cache function created
-function fetch_trail_data($state, $city = null, $activity = null)
+function fetch_trail_data(PDO $db, $state, $city = null, $activity = null)
 {
-    global $TRAIL_ACTIVITIES;
-
-    $db = getDB();
-
     $data = [
-        "limit" => 1,
+        "limit" => 100,
         "q-state_cont" => $state
     ];
 
     if (!empty($city)) {
         $data["q-city_cont"] = $city;
-    }
-
-    if (!empty($activity)) {
-        $data["q-activities_activity_type_name_eq"] = $activity;
     }
 
     $endpoint = "https://trailapi-trailapi.p.rapidapi.com/activity/";
@@ -46,47 +26,25 @@ function fetch_trail_data($state, $city = null, $activity = null)
             error_log("== Parsed Trail Data ==");
 
             $name = $trail["name"] ?? '';
-            $stateAbbr = strtoupper(substr($trail["state"] ?? '', 0, 2));
+            $state = $trail["state"] ?? '';
             $cityVal = $trail["city"] ?? '';
             $description = $trail["description"] ?? '';
             $is_api = 1;
 
             error_log("name: $name");
-            error_log("state: $stateAbbr");
+            error_log("state: $state");
             error_log("city: $cityVal");
             error_log("description: $description");
-
-            $activityFlags = [];
-            foreach ($TRAIL_ACTIVITIES as $act) {
-                $col = str_replace(" ", "_", strtolower($act));
-                $activityFlags[$col] = 0;
-            }
-
-            if (isset($trail["activities"]) && is_array($trail["activities"])) {
-                foreach ($trail["activities"] as $actDetails) {
-                    $actName = $actDetails["activity_type_name"] ?? '';
-                    $key = str_replace(" ", "_", strtolower($actName));
-                    if (array_key_exists($key, $activityFlags)) {
-                        $activityFlags[$key] = 1;
-                    }
-                }
-            }
-
-            foreach ($activityFlags as $k => $v) {
-                error_log("$k: " . ($v ? 'true' : 'false'));
-            }
-
             error_log("is_api: $is_api");
 
             // Insert using the passed DB handle
-            insert_trail($db, array_merge([
+            insert_trail($db, [
                 "name" => $name,
-                "state" => $stateAbbr,
+                "state" => $state,
                 "city" => $cityVal,
                 "description" => $description,
-                "is_api" => $is_api,
-                "activities" => $trail["activities"] ?? []
-            ], $activityFlags));
+                "is_api" => $is_api
+            ]);
         }
 
         return $decoded;

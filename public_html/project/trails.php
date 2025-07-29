@@ -1,70 +1,87 @@
 <?php
 require(__DIR__ . "/../../partials/nav.php");
 
-//lists all activities
-global $TRAIL_ACTIVITIES;
-
+$db = getDB();
 $result = [];
 
+$limit = isset($_POST["limit"]) ? max(1, min((int)$_POST["limit"], 100)) : 10;
 
-
-if (isset($_GET["state"])) {
-    $state = $_GET["state"];
-    $city = $_GET["city"] ?? null;
-    $activity = $_GET["activity"] ?? null;
-
-    $apiData = fetch_trail_data($state, $city, $activity);
-
-    if (!empty($apiData["places"])) {
-        // Only now open DB connection (we know work is needed)
-        echo "here";
-        $db = getDB();
-
-        foreach ($apiData["places"] as $trail) {
-            $trail["is_api"] = 1;
-            insert_trail($db, $trail);
-        }
-
-        $result = $apiData["places"];
-    }
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["state"])) {
+    $state = $_POST["state"];
+    $city = $_POST["city"] ?? null;
+    $result = array_slice(get_trails_or_fetch($state, $city), 0, $limit);
+} else {
+    $stmt = $db->prepare("SELECT * FROM `IT202-M25-Trails` ORDER BY `modified` DESC LIMIT :limit");
+    $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
 
-<div class="container-fluid">
-    <h1>Hiking & Outdoor Activity Search</h1>
-    <p>Search for outdoor activities based on city, state, and type of activity.</p>
+<script>
+function validate(form) {
+    let isValid = true;
+    const flashDiv = document.getElementById("flash");
+    if (flashDiv) flashDiv.innerHTML = "";
 
-    <form>
-        <div>
-            <label>City</label>
-            <input name="city" value="<?php se($_GET, 'city'); ?>" />
-        </div>
-        <div>
-            <label>State <span style="color:red;">*</span></label>
-            <input name="state" value="<?php se($_GET, 'state'); ?>" required />
-        </div>
-        <div>
-            <label>Activity</label>
-            <select name="activity">
-                <option value="">-- Any --</option>
-                <?php foreach ($TRAIL_ACTIVITIES as $activity) : ?>
-                    <option value="<?php echo $activity; ?>" <?php if (isset($_GET["activity"]) && $_GET["activity"] == $activity) echo "selected"; ?>>
-                        <?php echo ucfirst($activity); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <input type="submit" value="Search" />
-    </form>
+    const state = form.state.value.trim();
+    const limit = parseInt(form.limit.value.trim());
 
-    <div class="row">
-        <?php if (!empty($result)) : ?>
-            <h2>Results:</h2>
-            <pre><?php var_export($result); ?></pre>
-        <?php elseif ($_GET) : ?>
-            <p>No results found or failed request.</p>
-        <?php endif; ?>
+    if (!state) {
+        flash("State is required.", "danger");
+        isValid = false;
+    }
+
+    if (isNaN(limit) || limit < 1 || limit > 100) {
+        flash("Limit must be a number between 1 and 100.", "danger");
+        isValid = false;
+    }
+
+    return isValid;
+}
+</script>
+
+<h1>Trail Search</h1>
+<p>Search for trails by city and state.</p>
+
+<form method="POST" onsubmit="return validate(this)" class="inline-form">
+    <div class="form-item">
+        <label for="city">City</label>
+        <input type="text" name="city" id="city" value="<?php se($_POST, 'city'); ?>">
     </div>
-</div>
+    <div class="form-item">
+        <label for="state">State <span style="color:red">*</span></label>
+        <input type="text" name="state" id="state" required value="<?php se($_POST, 'state'); ?>">
+    </div>
+    <div class="form-item">
+        <label for="limit">Result Limit (1–100)</label>
+        <input type="number" name="limit" id="limit" min="1" max="100" value="<?php echo $limit; ?>">
+    </div>
+    <div class="form-item">
+        <label class="hidden"></label>
+        <input type="submit" value="Search">
+    </div>
+</form>
+
+<style>
+label.hidden {
+    padding-top: 20px;
+}
+</style>
+
+<?php if (!empty($result)) : ?>
+    <div class="trail-grid">
+        <?php foreach ($result as $trail): ?>
+            <a href="trail.php?id=<?php se($trail, 'id'); ?>" class="trail-card-link">
+                <div class="trail-card">
+                    <h2 class="trail-name"><?php se($trail, "name"); ?></h2>
+                    <p class="trail-location"><?php se($trail, "city"); ?>, <?php se($trail, "state"); ?></p>
+                </div>
+            </a>
+        <?php endforeach; ?>
+    </div>
+<?php elseif ($_SERVER["REQUEST_METHOD"] === "POST") : ?>
+    <p>No results found.</p>
+<?php endif; ?>
 
 <?php require(__DIR__ . "/../../partials/flash.php"); ?>
