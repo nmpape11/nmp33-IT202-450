@@ -47,7 +47,7 @@
     <h1 class="display-4">Welcome to Nicks's project</h1>
     <p class="lead">This is for the Summer semester of IT202 2025</p>
     <p>
-        <a class="btn btn-primary" href="<?php echo $BASE_PATH;?>/register.php" class="btn btn-primary">Register</a>
-        <a class="btn btn-secondary" href="<?php echo $BASE_PATH;?>/login.php" class="btn btn-secondary">Login</a>
+        <a class="btn btn-primary" href="<?php echo $BASE_PATH;?>/project/register.php" class="btn btn-primary">Register</a>
+        <a class="btn btn-secondary" href="<?php echo $BASE_PATH;?>/project/login.php" class="btn btn-secondary">Login</a>
     </p>
 </div>
