@@ -51,7 +51,7 @@ $favorites = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <form method="POST" action="unfavorite_trail.php" class="unfavorite-form">
                     <input type="hidden" name="trail_id" value="<?= se($trail["id"], null, false) ?>">
                     <input type="hidden" name="redirect" value="user_favorites.php">
-                    <button type="submit" class="unfavorite-btn">✗ Unfavorite</button>
+                    <button type="submit" class="unfavorite-btn">Unfavorite</button>
                 </form>
             </div>
         <?php endforeach; ?>

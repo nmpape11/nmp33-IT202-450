@@ -31,6 +31,7 @@ require(__DIR__."/../lib/functions.php");
             <li><a href="<?php get_url('landing.php', true);?>">Landing</a></li>
             <li><a href="<?php get_url('trails.php', true);?>">Trails</a></li>
             <li><a href="<?php get_url('user_favorites.php', true);?>">Favorites</a></li>
+            <li><a href="<?php get_url('user_search.php', true);?>">Find Users</a></li>
             <li><a href="<?php get_url('profile.php', true);?>">Profile</a></li>
         <?php endif; ?>
         <?php if (!is_logged_in()) : ?>
