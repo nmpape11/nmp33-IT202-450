@@ -43,13 +43,13 @@ if ($id && is_numeric($id)) {
                 <form method="POST" action="favorite_trail.php">
                     <input type="hidden" name="trail_id" value="<?php echo $trail['id']; ?>">
                     <input type="hidden" name="redirect" value="trail.php?id=<?php echo $trail['id']; ?>">
-                    <button type="submit" class="favorite-btn">❤ Favorite</button>
+                    <button type="submit" class="favorite-btn">Favorite</button>
                 </form>
             <?php else: ?>
                 <form method="POST" action="unfavorite_trail.php">
                     <input type="hidden" name="trail_id" value="<?php echo $trail['id']; ?>">
                     <input type="hidden" name="redirect" value="trail.php?id=<?php echo $trail['id']; ?>">
-                    <button type="submit" class="unfavorite-btn">✖ Unfavorite</button>
+                    <button type="submit" class="unfavorite-btn">Unfavorite</button>
                 </form>
             <?php endif; ?>
         </div>
