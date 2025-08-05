@@ -1,5 +1,6 @@
 <?php
 require(__DIR__ . "/../../partials/nav.php");
+reset_session();
 $email = "";
 $username = "";
 
@@ -111,27 +112,72 @@ if (isset($_POST["email"], $_POST["password"], $_POST["confirm"], $_POST["userna
 ?>
 
 <h3>Register</h3>
-<form onsubmit="return validate(this)" method="POST">
-    <div>
+<form onsubmit="return validate(this)" method="POST" class="register-form">
+    <div class="form-group">
         <label for="email">Email</label>
         <input id="email" type="email" name="email" value="<?php se($email); ?>" required />
     </div>
-    <div>
+    <div class="form-group">
         <label for="username">Username</label>
         <input type="text" name="username" value="<?php se($username); ?>" required maxlength="30" />
     </div>
-    <div>
+    <div class="form-group">
         <label for="pw">Password</label>
         <input type="password" id="pw" name="password" required minlength="8" />
     </div>
-    <div>
+    <div class="form-group">
         <label for="confirm">Confirm</label>
         <input type="password" name="confirm" required minlength="8" />
     </div>
-    <input type="submit" value="Register" />
+    <input type="submit" value="Register" class="register-button" />
 </form>
+
+<style>
+.register-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 12px;
+    background-color: #1e1e1e;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form-group label {
+    margin-bottom: 6px;
+    color: #fff;
+}
+
+.form-group input {
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #2a2a2a;
+    color: #fff;
+}
+
+.register-button {
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.register-button:hover {
+    background-color: #555;
+}
+</style>
+
 
 <?php
 require(__DIR__ . "/../../partials/flash.php");
-reset_session();
 ?>

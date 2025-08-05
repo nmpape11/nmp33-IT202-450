@@ -13,30 +13,74 @@ $limit = isset($_GET["limit"]) && is_numeric($_GET["limit"]) && $_GET["limit"] >
     ? (int)$_GET["limit"]
     : 10;
 
-$countStmt = $db->prepare("SELECT COUNT(*) as total FROM user_trail_favorites WHERE user_id = :uid");
-$countStmt->execute([":uid" => $user_id]);
+$state = $_GET["state"] ?? null;
+$city = $_GET["city"] ?? null;
+
+$whereClause = "WHERE f.user_id = :uid";
+$params = [":uid" => $user_id];
+
+if ($state) {
+    $whereClause .= " AND t.state LIKE :state";
+    $params[":state"] = "%" . $state . "%";
+}
+
+if ($city) {
+    $whereClause .= " AND t.city LIKE :city";
+    $params[":city"] = "%" . $city . "%";
+}
+
+// Count total matching records
+$countStmt = $db->prepare("
+    SELECT COUNT(*) as total
+    FROM `IT202-M25-Trails` t
+    JOIN user_trail_favorites f ON f.trail_id = t.id
+    $whereClause
+");
+$countStmt->execute($params);
 $total = $countStmt->fetchColumn();
 
 $stmt = $db->prepare("
     SELECT t.*
     FROM `IT202-M25-Trails` t
     JOIN user_trail_favorites f ON f.trail_id = t.id
-    WHERE f.user_id = :uid
-    LIMIT :limit");
-$stmt->bindValue(":uid", $user_id, PDO::PARAM_INT);
+    $whereClause
+    LIMIT :limit
+");
+foreach ($params as $key => $val) {
+    $stmt->bindValue($key, $val);
+}
 $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
 $stmt->execute();
 $favorites = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <h1 style="text-align:center;">Your Favorited Trails</h1>
-<p style="text-align:center;">You have <?= $total ?> trail<?= $total != 1 ? 's' : '' ?> favorited.</p>
+<p style="text-align:center;">You have <?= $total ?> trail<?= $total != 1 ? 's' : '' ?> favorited<?= $state || $city ? " (filtered)" : "" ?>.</p>
 
 <div class="filter-bar">
-    <form method="GET" class="filter-form">
-        <label for="limit">Results per page (1–100):</label>
-        <input type="number" name="limit" min="1" max="100" value="<?= $limit ?>">
-        <button type="submit">Apply</button>
+    <form method="POST" onsubmit="return validate(this)" class="inline-form">
+    <div class="form-item">
+        <label for="city">City</label>
+        <input type="text" name="city" id="city" value="<?php se($_POST, 'city'); ?>">
+    </div>
+    <div class="form-item">
+        <label for="state">State <span style="color:red">*</span></label>
+        <input type="text" name="state" id="state" required value="<?php se($_POST, 'state'); ?>">
+    </div>
+    <div class="form-item">
+        <label for="limit">Result Limit (1–100)</label>
+        <input type="number" name="limit" id="limit" min="1" max="100" value="<?php echo $limit; ?>">
+    </div>
+    <div class="form-item">
+        <label class="hidden"></label>
+        <input type="submit" value="Search">
+    </div>
+</form>
+</div>
+
+<div style="text-align:center; margin-bottom: 1rem;">
+    <form method="POST" action="clear_favorites.php" onsubmit="return confirm('Are you sure you want to remove all favorites?');">
+        <button type="submit" class="unfavorite-btn">Clear All Favorites</button>
     </form>
 </div>
 
@@ -44,12 +88,12 @@ $favorites = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="favorites-grid">
         <?php foreach ($favorites as $trail): ?>
             <div class="trail-card">
-                <a class="card-link" href="trail.php?id=<?= se($trail['id'], null, false) ?>">
+                <a class="card-link" href="trail.php?id=<?= se($trail['id']) ?>">
                     <h2><?= se($trail["name"]) ?></h2>
                     <p><?= se($trail["city"]) ?>, <?= se($trail["state"]) ?></p>
                 </a>
                 <form method="POST" action="unfavorite_trail.php" class="unfavorite-form">
-                    <input type="hidden" name="trail_id" value="<?= se($trail["id"], null, false) ?>">
+                    <input type="hidden" name="trail_id" value="<?= se($trail["id"]) ?>">
                     <input type="hidden" name="redirect" value="user_favorites.php">
                     <button type="submit" class="unfavorite-btn">Unfavorite</button>
                 </form>
@@ -78,44 +122,6 @@ a {
     justify-content: center;
     margin: 1.5rem 0;
 }
-
-.filter-form {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 1rem;
-}
-
-.filter-form label {
-    font-size: 0.95rem;
-    color: #ccc;
-    white-space: nowrap;
-}
-
-.filter-form input[type="number"] {
-    padding: 0.3rem 0.6rem;
-    width: 70px;
-    border: 1px solid #444;
-    border-radius: 6px;
-    background-color: #2a2a2a;
-    color: white;
-}
-
-.filter-form button {
-    background-color: #444;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
-}
-
-.filter-form button:hover {
-    background-color: #666;
-}
-
 .favorites-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));

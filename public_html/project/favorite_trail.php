@@ -18,7 +18,6 @@ if (!$trail_id || !is_numeric($trail_id)) {
 
 $db = getDB();
 
-// Check if already favorited to prevent duplicates
 $stmt = $db->prepare("SELECT 1 FROM user_trail_favorites WHERE user_id = :uid AND trail_id = :tid");
 $stmt->execute([":uid" => $user_id, ":tid" => $trail_id]);
 
@@ -32,7 +31,8 @@ $stmt = $db->prepare("INSERT INTO user_trail_favorites (user_id, trail_id) VALUE
 try {
     $stmt->execute([":uid" => $user_id, ":tid" => $trail_id]);
     flash("Trail favorited!", "success");
-} catch (Exception $e) {
+} 
+catch (Exception $e) {
     flash("Failed to favorite trail: " . $e->getMessage(), "danger");
 }
 

@@ -160,7 +160,7 @@ if (isset($_POST["currentPassword"], $_POST["newPassword"], $_POST["confirmPassw
         <input type="text" name="username" id="username" value="<?php se($username); ?>" required />
     </div>
     <!-- DO NOT PRELOAD PASSWORD -->
-    <div>Password Reset</div>
+    <h2>Password Reset</h2>
     <div class="mb-3">
         <label for="cp">Current Password</label>
         <input type="password" name="currentPassword" id="cp" />
@@ -175,6 +175,15 @@ if (isset($_POST["currentPassword"], $_POST["newPassword"], $_POST["confirmPassw
     </div>
     <input type="submit" value="Update Profile" name="save" />
 </form>
+
+<style>
+    form {
+        all: unset;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+</style>
 
 <script>
     // 7/7 nmp33 js validate

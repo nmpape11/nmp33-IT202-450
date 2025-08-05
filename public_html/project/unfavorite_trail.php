@@ -20,7 +20,8 @@ if ($trail_id && is_numeric($trail_id)) {
             ":tid" => $trail_id
         ]);
         flash("Trail removed from favorites.", "info");
-    } catch (Exception $e) {
+    } 
+    catch (Exception $e) {
         flash("Error unfavoriting trail: " . $e->getMessage(), "danger");
     }
 } else {
