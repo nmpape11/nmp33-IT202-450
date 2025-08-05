@@ -88,12 +88,12 @@ if (isset($_POST["username"])) {
 ?>
 <h3>Assign Roles</h3>
 <!-- search form -->
-<form method="POST">
+<form method="POST" class="search">
     <input type="search" name="username" placeholder="Username search" value="<?php se($username, false); ?>" />
     <input type="submit" value="Search" />
 </form>
 <!-- empty toggle form, inputs will use the form attribute to associate with this form -->
-<form id="toggleForm" method="POST"></form>
+<form class="hidden" id="toggleForm" method="POST"></form>
 <?php if (isset($username) && !empty($username)) : ?>
     <input form="toggleForm" type="hidden" name="username" value="<?php se($username, false); ?>" />
 <?php endif; ?>
@@ -123,7 +123,7 @@ if (isset($_POST["username"])) {
                 <!-- nested data for roles -->
                 <?php foreach ($active_roles as $role) : ?>
                     <div>
-                        <input form="toggleForm" id="role_<?php se($role, 'id'); ?>" type="checkbox" name="roles[]" value="<?php se($role, 'id'); ?>" />
+                        <input form="toggleForm" id="role_<?php se($role, 'id'); ?>" type="radio" name="roles[]" value="<?php se($role, 'id'); ?>" />
                         <label form="toggleForm" for="role_<?php se($role, 'id'); ?>"><?php se($role, "name"); ?></label>
                     </div>
                 <?php endforeach; ?>
@@ -131,7 +131,29 @@ if (isset($_POST["username"])) {
         </tr>
     </tbody>
 </table>
-<input form="toggleForm" type="submit" value="Toggle Roles" />
+<input class="toggle" form="toggleForm" type="submit" value="Assign Roles" />
+
+<style>
+    .toggle {
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: #444;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        max-width: 400px;;
+    }
+
+    .search {
+        gap: 10px;
+    }
+
+    .hidden {
+        all: unset;
+        display: none;
+    }
+</style>
 
 <?php
 //note we need to go up 1 more directory

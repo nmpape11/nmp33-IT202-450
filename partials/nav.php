@@ -30,6 +30,8 @@ require(__DIR__."/../lib/functions.php");
         <?php if (is_logged_in()) : ?>
             <li><a href="<?php get_url('landing.php', true);?>">Landing</a></li>
             <li><a href="<?php get_url('trails.php', true);?>">Trails</a></li>
+            <li><a href="<?php get_url('user_favorites.php', true);?>">Favorites</a></li>
+            <li><a href="<?php get_url('user_search.php', true);?>">Find Users</a></li>
             <li><a href="<?php get_url('profile.php', true);?>">Profile</a></li>
         <?php endif; ?>
         <?php if (!is_logged_in()) : ?>
@@ -37,10 +39,8 @@ require(__DIR__."/../lib/functions.php");
             <li><a href="<?php get_url('register.php', true);?>">Register</a></li>
         <?php endif; ?>
         <?php if (has_role("Admin")) : ?>
-            <li><a href="<?php get_url('admin/admin_trails.php', true); ?>">Admin Trails</a></li>
-            <li><a href="<?php get_url('admin/create_role.php', true); ?>">Create Role</a></li>
-            <li><a href="<?php get_url('admin/list_roles.php', true); ?>">List Roles</a></li>
-            <li><a href="<?php get_url('admin/assign_roles.php', true); ?>">Assign Roles</a></li>
+            <li><a href="<?php get_url('admin/admin_trails.php', true); ?>">Manage Trails</a></li>
+            <li><a href="<?php get_url('admin/roles.php', true); ?>">Manage Roles</a></li>
         <?php endif; ?>
         <?php if (is_logged_in()) : ?>
             <li><a href="<?php get_url('logout.php', true);?>">Logout</a></li>
