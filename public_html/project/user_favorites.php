@@ -58,14 +58,14 @@ $favorites = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <p style="text-align:center;">You have <?= $total ?> trail<?= $total != 1 ? 's' : '' ?> favorited<?= $state || $city ? " (filtered)" : "" ?>.</p>
 
 <div class="filter-bar">
-    <form method="POST" onsubmit="return validate(this)" class="inline-form">
+    <form method="GET" class="inline-form">
     <div class="form-item">
         <label for="city">City</label>
-        <input type="text" name="city" id="city" value="<?php se($_POST, 'city'); ?>">
+        <input type="text" name="city" id="city" value="<?php se($_GET, 'city'); ?>">
     </div>
     <div class="form-item">
         <label for="state">State <span style="color:red">*</span></label>
-        <input type="text" name="state" id="state" required value="<?php se($_POST, 'state'); ?>">
+        <input type="text" name="state" id="state" required value="<?php se($_GET, 'state'); ?>">
     </div>
     <div class="form-item">
         <label for="limit">Result Limit (1–100)</label>
