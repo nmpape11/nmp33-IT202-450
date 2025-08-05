@@ -135,18 +135,65 @@ if (isset($_POST["email"], $_POST["password"])) {
 
 <!-- 7/7 nmp33 html login form -->
 <h3>Login</h3>
-<form onsubmit="return validate(this)" method="POST">
-    <div>
+<form onsubmit="return validate(this)" method="POST" class="login-form">
+    <div class="form-group">
         <label for="email">Email or Username</label>
         <input id="email" type="text" name="email" value="<?php se($email); ?>" required />
     </div>
-    <div>
+    <div class="form-group">
         <label for="pw">Password</label>
         <input type="password" id="pw" name="password" required minlength="8" />
     </div>
-    <input type="submit" value="Login" />
+    <input type="submit" value="Login" class="login-button" />
 </form>
 
+
+<style>
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 400px; /* optional max width */
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 12px;
+        background-color: #1e1e1e;
+        gap: 15px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .form-group label {
+        margin-bottom: 6px;
+        color: #fff;
+    }
+
+    .form-group input {
+        padding: 10px;
+        font-size: 1rem;
+        background-color: #2a2a2a;
+        color: #fff;
+    }
+
+    .login-button {
+        padding: 10px;
+        font-size: 1rem;
+        background-color: #444;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .login-button:hover {
+        background-color: #555;
+    }
+
+</style>
 <?php
 require(__DIR__ . "/../../partials/flash.php");
 ?>
